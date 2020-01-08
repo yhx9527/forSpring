@@ -37,6 +37,8 @@ ws.delete(obj);
 
 # Map
 
+map只能通过他的方法进行设值，而不能通过类似mp['a']来映射
+
 ```
 const m=new Map([[1,2], [2,3]]);
 m.set(obj, 'abc');
