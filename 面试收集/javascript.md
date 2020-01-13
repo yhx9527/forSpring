@@ -1123,3 +1123,47 @@ setTimeout(function test(){
 
 
 
+#### 25.循环方法的比较
+
+```
+for,是最快的
+for-in 遍历对象的属性，同时继承链上的也会被遍历
+for-of 只要是使用了iterable接口就可以遍历
+数组的循环方法
+forEach,map,reduce,every，some
+```
+
+```
+for-of循环会自动去寻早iterator接口，这个接口部署在Symbol.iterator属性，这是个函数，执行后会返回一个遍历器对象，这个对象有next方法，每次都会返回当前成员的信息对象，有value，done两个属性
+```
+
+#### 延伸：iterator实现
+
+```
+对数组生成遍历器
+
+function makeIterator(array){
+	let nextIndex=0;
+	return {
+		next: function(){
+			return nextIndex < array.length?
+				{value: array[nextIndex++], done:false}:{value: undefined, done: true}
+		}
+	}
+}
+let it=makeIneratro(['a', 'b'])
+it.next()
+```
+
+**调用iterator接口的场合**
+
+```
+解构赋值
+扩展运算符
+yield* 后面跟着一个可遍历的结构
+```
+
+
+
+
+
