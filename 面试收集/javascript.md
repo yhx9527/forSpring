@@ -219,7 +219,7 @@ function p1(a) {
 ...类似的有p2, p3, p4
 const promiseArr=[p1, p2, p3, p4];
 function runPromiseInSequence(arr, input){
-	return arr.reduce((promiseChain, currentFunction)=promiseChain.then(currentFunction),Promise.resolve(input))
+	return arr.reduce((promiseChain, currentFunction)=>promiseChain.then(currentFunction),Promise.resolve(input))
 }
 
 runPromiseSequence(promiseArr,10).
@@ -770,8 +770,31 @@ element.setAttribute()
 element.setAttributeNode()
 parent.appendChild();
 parent.insertBefore();
+
+```
+
+- 删除
+
+```
 parent.removeChild();
 ```
+
+#### 延伸： querySelectorAll和getElementsBy的区别
+
+```
+1. 接收参数上
+querySelector传的是css选择器符
+getElementsBy系列传的是单个的className，name
+2. 返回值上
+querySelectorAll返回的是静态的nodeList对象，是一个快照
+getElementsBy返回的是一个动态的nodeList对象，会自动更新
+3. 速度上
+getElementsBy更快
+```
+
+
+
+
 
 
 
@@ -1165,5 +1188,11 @@ yield* 后面跟着一个可遍历的结构
 
 
 
+#### 26. Object对象
 
+ [Object对象.md](../前端知识/Object对象.md) 
+
+#### 27. 事件委托，详见另一记录
+
+ [事件委托.md](../前端知识/事件委托.md) 
 

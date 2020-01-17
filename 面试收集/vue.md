@@ -132,3 +132,74 @@ $listeners包含了父组件绑定的事件
 	通过vue的预渲染将骨架屏组件渲染成html片段，插入到首页模版的挂载点，当前端渲染完成时，会将骨架屏内容替换成真正的页面内容
 ```
 
+#### 8. Vue的生命周期
+
+- beforeCreate
+
+完成实例初始化，但还没进行数据绑定及dom节点挂载，即data和$el为undefined
+
+- created
+
+已完成数据绑定，属性和方法的运算，watch/event事件回调。还没挂载dom节点，即data有值，$el为undefined
+
+- beforeMount
+
+对template模版进行编译解析，生成虚拟dom,还没渲染
+
+- mounted
+
+已将虚拟dom转成了真实的dom，并挂载到页面上了
+
+- beforeUpdate
+
+数据更新时，新旧虚拟dom通过diff算法得出补丁，在打补丁之前
+
+- updated
+
+通过patch给真实的dom打上补丁，更新完毕，页面相关dom已发生变化
+
+- beforeDestroy
+
+实例销毁之前调用
+
+- destroyed
+
+vue实例销毁之后调用，实例的所有东西被解绑，子实例也被销毁，dom还存在
+
+
+
+#### 9.对vue项目的优化
+
+- 代码层面的优化
+
+```
+1. v-if和v-show
+v-show使用于频繁切换的场景
+2. 合理使用computed和watch
+computed有缓存特性
+3. v-for遍历时添加key
+4. 长列表优化，对于不会改变的数据，进行Object.freeze冻结，防止vue劫持数据
+5. 组件销毁时，通过addEventListener绑定的事件要进行销毁
+6. 图片的懒加载
+7.路由懒加载
+```
+
+- web层面的优化
+
+```
+1. 浏览器的缓存
+2. 使用cdn
+```
+
+ [性能.md](../前端知识/性能.md) 
+
+
+
+#### vue3.0新特性
+
+```
+1. 使用typescript进行编写
+2. 摇树优化：也就是只导入用到的API
+3. 更轻量更快
+```
+
