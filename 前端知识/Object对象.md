@@ -49,7 +49,7 @@ Object.create(obj, descriptor)
 descriptor
 数据描述符和存取描述符
 {
-	configurable,//默认false，属性可配置，即可悲删除
+	configurable,//默认false，属性可配置，即可被删除
 	enumerable, //默认false，可枚举
 	value,//默认undefined
 	writable,//默认false

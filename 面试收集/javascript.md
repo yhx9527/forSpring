@@ -871,7 +871,7 @@ str.replace(regexp|substr, newSubStr|function)//字符串替换，返回替换�
 
 str.charAt(index);//返回指定位置的字符
 str.indexOf(searchValue, fromIndex可选);//返回字符出现的第一个位置
-str.slice(beginIndex[, endIndex]);//返回子串，不改变原字符串
+str.slice(beginIndex[, endIndex]);//返回子串，不改变原字符串,与substring区别在于参数的处理不同
 str.split([separator[, limit]]);//拆分字符串为数组
 str.substring(indexStart[, indexEnd]);//返回子串
 str.trim()；//两端删除空白符
