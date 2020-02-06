@@ -236,6 +236,7 @@ var countedNames=names.reduce((allNames, name)=>{
 	}else{
 		allNames[name]=1;
 	}
+	return allNames;
 }, {})
 ```
 
@@ -271,11 +272,10 @@ bind也是改变this的指向，但它会返回一个新的函数，他就是一
 #### 延伸1: call的实现
 
 ```
-Function.prototype.myCall=function(context){
+Function.prototype.myCall=function(context, ...args){
 	let ctx=context || window;
 	ctx.fn=this;
-	let args = [...arguments].slice(1);
-	let result=context.fn(...args);
+	let result=ctx.fn(...args);
 	delete ctx.fn;
 	return result;
 }
@@ -286,12 +286,12 @@ Function.prototype.myCall=function(context){
 #### 延伸2: apply的实现
 
 ```
-Function.prototype.myApply=function(context){
+Function.prototype.myApply=function(context, args){
 	let ctx=context || window;
 	ctx.fn=this;
 	let result;
-	if(arguments[1]){
-		result=ctx.fn(...arguments[1]);
+	if(args){
+		result=ctx.fn(...args);
 	} else {
 		result=ctx.fn();
 	}
@@ -305,17 +305,16 @@ Function.prototype.myApply=function(context){
 #### 延伸3 ： bind的实现
 
 ```
-Function.prototype.myBind=function(context){
-	//if(typeof this!=='function'){
-		//throw new TypeError('Error');
-	//}
+Function.prototype.myBind=function(context, ...args){
+	if(typeof this!=='function'){
+		throw ('Error');
+	}
 	let _this=this;
-	let args=[...arguments].slice(1);
 	return function F(){
 		if(this instanceOf F){
 			return new _this(...args, ...arguments);
 		}
-		return _this.apply(context, args.concat([...arguments]));
+		return _this.apply(context, [...args, ...arguments]));
 	}
 }
 ```
@@ -333,7 +332,7 @@ function curry(fn, args){
 	let length=fn.length;
 	args=args || [];
 	return function(){
-		let _args=args.slice(0).concat([...arguments]);
+		let _args=[...args, ...arguments]
 		if(_args.length<length){
 			return curry.call(this, fn, _args);
 		} else {
@@ -373,8 +372,7 @@ console.log(fn + 10); // 40
 
 
 ```
-function add(){
-	let args=[...arguments];
+function add(...args){
 	//闭包保存参数
 	let _adder=function(){
 		args.push(...arguments);
@@ -384,7 +382,6 @@ function add(){
 	_adder.toString=function(){
 		return args.reduce((a,b)=>a+b);
 	}
-	
 	return _adder;
 }
 ```
@@ -403,13 +400,12 @@ function add(){
 ```
 
 ```
-function myNew(){
-	let constructor=[].shift.call(arguments);
+function myNew(constructor, ...args){
 	if(typeof constructor !== "function"){
-		 throw new Error('请传入构造函数');
+		 throw ('请传入构造函数');
 	}
 	let 	   obj=Object.create(constructor.prototype);
-	let temp=constructor.apply(obj, arguments);
+	let temp=constructor.apply(obj, args);
   return typeof temp ==="object" ? temp : obj;
 }
 ```
@@ -623,7 +619,7 @@ var arr = MyArray.of(3)
 ```
 1. instanceof
 2. isPrototypeOf()
-3. Object.getPrototypeOf();
+3. Reflect.getPrototypeOf();
 ```
 
 
@@ -660,6 +656,29 @@ var obj={'a':1, 'b':{'c':'b'}}
 (async () => {
   const clone = await structuralClone(obj)
 })()
+```
+
+```
+深拷贝简单版
+function deepClone(obj){
+        if(obj===null) return;
+        let newObj = Reflect.ownKeys(obj).reduce((acc, cur)=>{
+            if(typeof obj[cur] === 'object'){
+                Reflect.set(acc, cur, deepClone(obj[cur]))
+            } else if(typeof obj[cur]==='function'){
+                Reflect.set(acc, cur, new Function(`return ${obj[cur].toString()}`)())
+                let temp = deepClone({...obj[cur]})
+                for(let key of Object.keys(temp)){
+                    Reflect.set(acc[cur], key, temp[key]);
+                }
+            }
+            else{
+                Reflect.set(acc, cur, obj[cur])
+            }
+            return acc;
+        }, {})
+        return newObj;
+    }
 ```
 
 
@@ -798,7 +817,7 @@ getElementsBy更快
 
 
 
-#### 13. Array.sort()方法和实现机制
+#### 13. arr.sort()方法和实现机制
 
 ```
 默认排序：首先会将每个数组项转成字符串，然后按照unicode编码对其进行排序
@@ -924,7 +943,7 @@ location.origin //url协议，主机名，端口
 location.search //从？开始
 
 location.assign(url)//跳转到新的url
-location.replace(url)//跳转到新的地址，但无法回腿
+location.replace(url)//跳转到新的地址，但无法回退
 location.reload() //刷新
 ```
 
@@ -970,6 +989,7 @@ history.go(num)
 - 发送http请求， 如果是https的话进行TLS握手
 - 请求服务器时，可能还会经过负责负载均衡的服务器，将请求转发到目标服务器，然后响应请求
 - 浏览器收到请求，判断状态码，如果是200则继续解析，如果是400或500则报错，如果是300的会进行重定向
+- 浏览器解析文档，如果是gzip的话要解压
 - 浏览器开始解析文件，首先根据html构建dom树，如果有css则构建cssom树
 - dom树和cssom树构建完成后开始生成渲染树
 - 浏览器根据渲染树调用GPU进行绘制，将内容显示在屏幕上
@@ -1093,7 +1113,6 @@ js是单线程的，执行时有一个工作栈和任务队列
 微任务
 promise
 mutationObserver
-Object.observe
 prcess.nextTick
 
 宏任务

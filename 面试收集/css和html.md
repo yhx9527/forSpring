@@ -134,7 +134,7 @@ id选择器 权重100
 	postion: absolute;
 	height: 100px;
 	widht: 100px;
-	margin: auto;
+	margin: auto; //必要
 	top:0;
 	left:0;
 	right:0;
